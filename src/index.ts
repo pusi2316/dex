@@ -2,6 +2,7 @@ import "dotenv/config";
 import { spawn } from "child_process";
 import * as readline from "readline";
 import { destroyTxt, transcribeAudio } from "./transcription/transcribe";
+import { askClaude } from "./claude/claude-prompter";
 
 function recordUntilEnter(outputPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -48,6 +49,10 @@ async function main() {
   console.log("Transcription:", text);
 
   cleanup();
+
+  console.log("Asking Claude...");
+  const reply = await askClaude(text);
+  console.log("Claude says:", reply);
 }
 
 main();
