@@ -2,6 +2,7 @@ import "dotenv/config";
 import { destroyTxt, transcribeAudio } from "./transcription/transcribe";
 import { askClaude } from "./claude/claude-prompter";
 import { destroyAudio, recordUntilEnter } from "./audio/audio-recorder";
+import { speak } from "./audio/audio-speaker";
 
 function cleanup() {
   destroyTxt("test");
@@ -20,6 +21,9 @@ async function main() {
   console.log("Asking Claude...");
   const reply = await askClaude(text);
   console.log("Claude says:", reply);
+
+  console.log("Speaking reply...");
+  await speak(reply);
 }
 
 main();
