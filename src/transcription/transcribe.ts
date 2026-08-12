@@ -5,9 +5,6 @@ const WHISPER_MODEL = process.env.WHISPER_MODEL!;
 
 export function transcribeAudio(audioPath: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    console.log(`Transcribing audio file: ${audioPath}`);
-    console.log(`Using Whisper binary: ${WHISPER_BINARY}`);
-    console.log(`Using Whisper model: ${WHISPER_MODEL}`);
     const outputBase = audioPath.replace(".wav", "");
     execFile(
       WHISPER_BINARY,
