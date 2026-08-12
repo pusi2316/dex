@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { destroyTxt, transcribeAudio } from "./transcription/transcribe";
 import { askClaude } from "./claude/claude-prompter";
-import { destroyAudio, recordUntilEnter } from "./recording/audio-recorder";
+import { destroyAudio, recordUntilEnter } from "./audio/audio-recorder";
 
 function cleanup() {
   destroyTxt("test");
