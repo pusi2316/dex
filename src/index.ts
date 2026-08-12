@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { spawn } from "child_process";
 import * as readline from "readline";
-import { transcribeAudio } from "./transcription/transcribe";
+import { destroyTxt, transcribeAudio } from "./transcription/transcribe";
 
 function recordUntilEnter(outputPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -26,12 +26,28 @@ function recordUntilEnter(outputPath: string): Promise<void> {
   });
 }
 
+function destroyAudio(outputPath: string): void {
+  const fs = require("fs");
+  try {
+    fs.unlinkSync(outputPath);
+  } catch (err) {
+    console.error(`Error deleting ${outputPath}:`, err);
+  }
+}
+
+function cleanup() {
+  destroyTxt("test");
+  destroyAudio("test.wav");
+}
+
 async function main() {
   await recordUntilEnter("test.wav");
   console.log("Done recording.");
 
   const text = await transcribeAudio("test.wav");
   console.log("Transcription:", text);
+
+  cleanup();
 }
 
 main();
