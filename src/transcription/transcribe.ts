@@ -1,4 +1,5 @@
 import { execFile } from "child_process";
+import * as fs from "fs";
 
 const WHISPER_BINARY = process.env.WHISPER_BINARY!;
 const WHISPER_MODEL = process.env.WHISPER_MODEL!;
@@ -14,10 +15,17 @@ export function transcribeAudio(audioPath: string): Promise<string> {
           reject(err);
           return;
         }
-        const fs = require("fs");
         const text = fs.readFileSync(`${outputBase}.txt`, "utf8").trim();
         resolve(text);
       }
     );
   });
+}
+
+export function destroyTxt(outputBase: string): void {
+  try {
+    fs.unlinkSync(`${outputBase}.txt`);
+  } catch (err) {
+    console.error(`Error deleting ${outputBase}.txt:`, err);
+  }
 }
