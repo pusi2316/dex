@@ -1,5 +1,7 @@
+import "dotenv/config";
 import { spawn } from "child_process";
 import * as readline from "readline";
+import { transcribeAudio } from "./transcription/transcribe";
 
 function recordUntilEnter(outputPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -27,6 +29,9 @@ function recordUntilEnter(outputPath: string): Promise<void> {
 async function main() {
   await recordUntilEnter("test.wav");
   console.log("Done recording.");
+
+  const text = await transcribeAudio("test.wav");
+  console.log("Transcription:", text);
 }
 
 main();
