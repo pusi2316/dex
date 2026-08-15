@@ -1,1 +1,1 @@
-pub mod speaker
+pub mod speaker;
