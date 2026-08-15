@@ -5,7 +5,7 @@ import "./App.css";
 function App() {
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    await invoke("speak", { text: "Speaking From Rust" });
+    await invoke("speak", { text: "Speaking From Rust", voice: "Samantha" });
   }
 
   return (
