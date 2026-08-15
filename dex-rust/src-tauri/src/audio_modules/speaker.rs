@@ -1,7 +1,7 @@
 use std::process::Command;
 
 #[tauri::command]
-fn speak(text: String) -> Result<(), String> {
+pub fn speak(text: String) -> Result<(), String> {
     let status = Command::new("say")
         .arg(&text)
         .status()
