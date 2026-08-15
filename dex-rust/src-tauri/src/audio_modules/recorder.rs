@@ -21,10 +21,12 @@ pub fn toggle_recording_internal(state: &RecordingState) -> Result<String, Strin
         Some(mut child) => {
             child.kill().map_err(|e| e.to_string())?;
             Ok("Recording stopped.".into())
+            .spawn()
+            .map_err(|e| e.to_string())?;
         }
         None => {
             let child Coommand::new("sox")
-            .args(["-d", "/tmp/dex_recording.wav"])
+            .args(["-d", "/tmp/dex_recording.wav"]);
 
             *process_lock = Some(child);
             Ok("Recording started.".into())
