@@ -1,7 +1,11 @@
 mod audio_modules;
 use audio_modules::recorder::toggle_recording;
+use audio_modules::recorder::toggle_recording_internal;
 use audio_modules::recorder::RecordingState;
 use audio_modules::speaker::speak;
+use tauri::Manager;
+use tauri_plugin_global_shortcut::GlobalShortcutExt;
+use tauri_plugin_global_shortcut::ShortcutState;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -10,7 +14,7 @@ pub fn run() {
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .manage(RecordingState::new())
         .setup(|app| {
-            let handle = app.handle().clone();
+            let _handle = app.handle().clone();
             app.global_shortcut().on_shortcut(
                 "CommandOrControl+Shift+Space",
                 move |app_handle, _shortcut, event| {

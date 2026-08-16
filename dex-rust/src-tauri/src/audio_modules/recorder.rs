@@ -23,10 +23,10 @@ pub fn toggle_recording_internal(state: &RecordingState) -> Result<String, Strin
             Ok("Recording stopped.".into())
         }
         None => {
-            let child Coommand::new("sox")
-            .args(["-d", "/tmp/dex_recording.wav"])
-            .spawn()
-            .map_err(|e| e.to_string())?;
+            let child = Command::new("sox")
+                .args(["-d", "recordings/dex_recording.wav"])
+                .spawn()
+                .map_err(|e| e.to_string())?;
 
             *process_lock = Some(child);
             Ok("Recording started.".into())
@@ -35,6 +35,9 @@ pub fn toggle_recording_internal(state: &RecordingState) -> Result<String, Strin
 }
 
 #[tauri::command]
-pub fn toggle_recording(app_handle: AppHandle, state: State<RecordingState>) -> Result<String, String> {
-    let result = toggle_recording_internal(&state)
+pub fn toggle_recording(
+    app_handle: AppHandle,
+    state: State<RecordingState>,
+) -> Result<String, String> {
+    toggle_recording_internal(&state)
 }
