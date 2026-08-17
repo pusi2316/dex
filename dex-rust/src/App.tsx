@@ -1,11 +1,14 @@
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
+import { useState } from "react";
 
 function App() {
+  const [text, setText] = useState("");
   async function greet() {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
     await invoke("speak", { text: "Speaking From Rust", voice: "Samantha" });
+    setText(await invoke("transcribe"));
   }
 
   return (
@@ -33,6 +36,7 @@ function App() {
         }}
       >
         <button type="submit">Greet</button>
+        <p>{text}</p>
       </form>
     </main>
   );
