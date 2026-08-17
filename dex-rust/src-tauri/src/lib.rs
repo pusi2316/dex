@@ -1,13 +1,14 @@
 mod audio_modules;
+mod transcription;
 use audio_modules::recorder::toggle_recording;
 use audio_modules::recorder::toggle_recording_internal;
 use audio_modules::recorder::RecordingState;
 use audio_modules::speaker::speak;
-use audio_modules::transcriber::transcribe;
 use dotenvy::dotenv;
 use tauri::Manager;
 use tauri_plugin_global_shortcut::GlobalShortcutExt;
 use tauri_plugin_global_shortcut::ShortcutState;
+use transcription::transcriber::transcribe;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
