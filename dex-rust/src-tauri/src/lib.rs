@@ -3,12 +3,15 @@ use audio_modules::recorder::toggle_recording;
 use audio_modules::recorder::toggle_recording_internal;
 use audio_modules::recorder::RecordingState;
 use audio_modules::speaker::speak;
+use audio_modules::transcriber::transcribe;
+use dotenvy::dotenv;
 use tauri::Manager;
 use tauri_plugin_global_shortcut::GlobalShortcutExt;
 use tauri_plugin_global_shortcut::ShortcutState;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    dotenvy::dotenv().ok();
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
@@ -29,7 +32,11 @@ pub fn run() {
             )?;
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![speak, toggle_recording])
+        .invoke_handler(tauri::generate_handler![
+            speak,
+            toggle_recording,
+            transcribe
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
