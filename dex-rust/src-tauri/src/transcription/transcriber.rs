@@ -22,8 +22,5 @@ pub fn transcribe() -> Result<String, String> {
     let output_txt_path = format!("{}.txt", audioPath);
     let text = fs::read_to_string(&output_txt_path).map_err(|e| e.to_string())?;
 
-    let _ = fs::remove_file(&audio_path);
-    let _ = fs::remove_file(&output_txt_path);
-
     Ok(text.trim().to_string())
 }
