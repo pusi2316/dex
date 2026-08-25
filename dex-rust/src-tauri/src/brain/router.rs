@@ -1,4 +1,4 @@
-async fn ask_claude_api_with_model
+use crate::brain::claude_api::ask_claude_api;
 
 pub async fn should_search_vault(transcript: &str) -> Result<bool, String> {
     let prompt = format!(
@@ -7,6 +7,6 @@ pub async fn should_search_vault(transcript: &str) -> Result<bool, String> {
         transcript
     );
 
-    let response = ask_claude_api_with_model(prompt, "claude-haiku-4-5-20251001").await?;
+    let response = ask_claude_api(prompt, "claude-haiku-4-5-20251001").await?;
     Ok(response.trim().to_lowercase().starts_with("yes"))
 }
