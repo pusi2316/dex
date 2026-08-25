@@ -1,8 +1,12 @@
-const VAULT_TRIGGERS: [&str; 8] = [
-    "note", "notes", "vault", "wrote", "written", "remember", "obsidian", "my notes",
-];
+async fn ask_claude_api_with_model
 
-const needs_vault_access(input: &str) -> bool {
-    let input_lower = input.to_lowercase();
-    VAULT_TRIGGERS.iter().any(|&trigger| input_lower.contains(trigger))
+pub async fn should_search_vault(transcript: &str) -> Result<bool, String> {
+    let prompt = format!(
+        "Does answering this require searching personal notes/vault? \
+         Reply with only 'yes' or 'no'.\n\nQuery: {}",
+        transcript
+    );
+
+    let response = ask_claude_api_with_model(prompt, "claude-haiku-4-5-20251001").await?;
+    Ok(response.trim().to_lowercase().starts_with("yes"))
 }
