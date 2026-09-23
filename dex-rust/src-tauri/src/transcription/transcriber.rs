@@ -1,26 +1,30 @@
-use std::env;
-use std::fs;
-use std::process::Command;
+use crate::audio_modules::paths::recording_path;
+use crate::audio_modules::whisper_state::WhisperState;
+use hound::WavReader;
+use tauri::State;
+use whisper_rs::{FullParams, SamplingStrategy};
 
 #[tauri::command]
-pub fn transcribe() -> Result<String, String> {
-    let whisper_binary =
-        env::var("WHISPER_BINARY").map_err(|_| "WHISPER_BINARY not set in .env".to_string())?;
-    let model_path =
-        env::var("WHISPER_MODEL").map_err(|_| "WHISPER_MODEL not set in .env".to_string())?;
+pub fn transcribe(whisper: State<WhisperState>) -> Result<String, String> {
+    let audio_path = recording_path();
 
-    let audioPath = "recordings/dex_recording.wav";
-    let status = Command::new(&whisper_binary)
-        .args(["-m", &model_path, "-f", &audioPath, "-ng", "-otxt"])
-        .status()
+    let mut reader = WavReader::open(&audio_path).map_err(|e| e.to_string())?;
+    let samples: Vec<f32> = reader
+        .samples::<i16>()
+        .map(|s| s.map(|v| v as f32 / i16::MAX as f32))
+        .collect::<Result<_, _>>()
         .map_err(|e| e.to_string())?;
 
-    if !status.success() {
-        return Err(format!("whisper-cli exited with status: {}", status));
+    let mut state = whisper.context.create_state().map_err(|e| e.to_string())?;
+    let params = FullParams::new(SamplingStrategy::Greedy { best_of: 1 });
+    state.full(params, &samples).map_err(|e| e.to_string())?;
+
+    let num_segments = state.full_n_segments().map_err(|e| e.to_string())?;
+    let mut text = String::new();
+    for i in 0..num_segments {
+        text.push_str(&state.full_get_segment_text(i).map_err(|e| e.to_string())?);
     }
 
-    let output_txt_path = format!("{}.txt", audioPath);
-    let text = fs::read_to_string(&output_txt_path).map_err(|e| e.to_string())?;
-
+    let _ = std::fs::remove_file(&audio_path);
     Ok(text.trim().to_string())
 }
