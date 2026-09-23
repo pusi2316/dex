@@ -4,6 +4,7 @@ mod transcription;
 
 use audio_modules::recorder::{toggle_recording, toggle_recording_internal, RecordingState};
 use audio_modules::speaker::speak;
+use audio_modules::whisper_state::WhisperState;
 use brain::think_and_search;
 use tauri::Manager;
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
@@ -16,6 +17,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .manage(RecordingState::new())
+        .manage(WhisperState::new())
         .setup(|app| {
             let _handle = app.handle().clone();
             app.global_shortcut().on_shortcut(
