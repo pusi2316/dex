@@ -6,7 +6,7 @@ use claude_api::ask_claude_api;
 use claude_code_search::search_obsidian_vault;
 use router::should_search_vault;
 
-#[tauri::command]
+/*#[tauri::command]
 pub async fn think_and_search(transcript: &str) -> Result<String, String> {
     let should_search = should_search_vault(&transcript).await.unwrap_or(false);
 
@@ -23,4 +23,4 @@ pub async fn think_and_search(transcript: &str) -> Result<String, String> {
     };
 
     ask_claude_api(prompt, "claude-sonnet-4-6").await
- }
+ }*/

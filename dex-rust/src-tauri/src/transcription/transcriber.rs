@@ -1,4 +1,3 @@
-use crate::audio_modules::paths::recording_path;
 use crate::audio_modules::whisper_state::WhisperState;
 use hound::WavReader;
 use tauri::State;
@@ -6,7 +5,7 @@ use whisper_rs::{FullParams, SamplingStrategy};
 
 #[tauri::command]
 pub fn transcribe(whisper: State<WhisperState>) -> Result<String, String> {
-    let audio_path = recording_path();
+    let audio_path = "recordings/dex_recording.wav";
 
     let mut reader = WavReader::open(&audio_path).map_err(|e| e.to_string())?;
     let samples: Vec<f32> = reader
@@ -15,7 +14,7 @@ pub fn transcribe(whisper: State<WhisperState>) -> Result<String, String> {
         .collect::<Result<_, _>>()
         .map_err(|e| e.to_string())?;
 
-    let mut state = whisper.context.create_state().map_err(|e| e.to_string())?;
+    let mut state = whisper.context.create_state().map_err(|e: /* Type */| e.to_string())?;
     let params = FullParams::new(SamplingStrategy::Greedy { best_of: 1 });
     state.full(params, &samples).map_err(|e| e.to_string())?;
 
