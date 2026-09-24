@@ -21,10 +21,16 @@ pub fn transcribe(whisper: State<WhisperState>) -> Result<String, String> {
     let params = FullParams::new(SamplingStrategy::Greedy { best_of: 1 });
     state.full(params, &samples).map_err(|e: WhisperError| e.to_string())?;
 
-    let num_segments = state.full_n_segments().map_err(|e: WhisperError| e.to_string())?;
+    let num_segments = state.full_n_segments();
     let mut text = String::new();
     for i in 0..num_segments {
-        text.push_str(&state.get_segment(i).map_err(|e: WhisperError| e.to_string())?);
+        text.push_str(
+            &state
+                .get_segment(i)
+                .expect("Failed to get Segment")
+                .to_str()
+                .expect("Failed to convert to str"),
+        );
     }
 
     let _ = std::fs::remove_file(&audio_path);
