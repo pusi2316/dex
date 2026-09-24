@@ -24,11 +24,7 @@ pub fn transcribe(whisper: State<WhisperState>) -> Result<String, String> {
     let num_segments = state.full_n_segments().map_err(|e: WhisperError| e.to_string())?;
     let mut text = String::new();
     for i in 0..num_segments {
-        text.push_str(
-            &state
-                .full_get_segment_text(i)
-                .map_err(|e: WhisperError| e.to_string())?,
-        );
+        text.push_str(&state.get_segment(i).map_err(|e: WhisperError| e.to_string())?);
     }
 
     let _ = std::fs::remove_file(&audio_path);
