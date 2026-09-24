@@ -8,11 +8,15 @@ pub fn transcribe(whisper: State<WhisperState>) -> Result<String, String> {
     let audio_path = "recordings/dex_recording.wav";
 
     let mut reader = WavReader::open(&audio_path).map_err(|e: hound::Error| e.to_string())?;
-    let samples: Vec<f32> = reader
+
+    let num_samples = reader.duration() as usize;
+
+    let samples = reader
         .samples::<i16>()
+        .take(num_samples)
         .map(|s| s.map(|v| v as f32 / i16::MAX as f32))
-        .collect::<Result<_, _>>()
-        .map_err(|e| e.to_string())?;
+        .collect::<Result<Vec<f32>, hound::Error>>() // <-- Specify Vec<f32> here
+        .map_err(|e| e.to_string() + " transcribe Error")?;
 
     let mut state = whisper
         .context

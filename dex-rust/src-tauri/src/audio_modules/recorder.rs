@@ -24,7 +24,16 @@ pub fn toggle_recording_internal(state: &RecordingState) -> Result<String, Strin
         }
         None => {
             let child = Command::new("sox")
-                .args(["-d", "-r", "16000", "recordings/dex_recording.wav"])
+                .args([
+                    "-d",
+                    "-r",
+                    "16000", // Set sample rate to 16kHz
+                    "-b",
+                    "16", // FORCE 16-bit depth (Fixes hound error)
+                    "-c",
+                    "1",
+                    "recordings/dex_recording.wav",
+                ])
                 .spawn()
                 .map_err(|e| e.to_string())?;
 
