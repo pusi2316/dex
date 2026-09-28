@@ -5,6 +5,7 @@ mod transcription;
 use audio_modules::recorder::{toggle_recording, toggle_recording_internal, RecordingState};
 use audio_modules::speaker::speak;
 use audio_modules::whisper_state::WhisperState;
+use chat_processor::ChatProcessor::process_chat;
 use tauri::Manager;
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 use transcription::transcriber::transcribe;
@@ -33,7 +34,12 @@ pub fn run() {
             )?;
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![speak, toggle_recording, transcribe,])
+        .invoke_handler(tauri::generate_handler![
+            speak,
+            toggle_recording,
+            transcribe,
+            procces_chat,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
