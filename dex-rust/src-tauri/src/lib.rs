@@ -38,7 +38,7 @@ pub fn run() {
             speak,
             toggle_recording,
             transcribe,
-            procces_chat,
+            process_chat,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
