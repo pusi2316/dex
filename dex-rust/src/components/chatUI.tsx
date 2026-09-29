@@ -23,7 +23,7 @@ export function ChatUI() {
     setLoading(true);
 
     try {
-      const reply = await invoke<string>("chat", { text });
+      const reply = await invoke<string>("process_chat", { text });
       setMessages((prev) => [...prev, { role: "assistant", text: reply }]);
       invoke("speak", { text: reply }).catch(console.error); // fire-and-forget, as before
     } catch (err) {
