@@ -1,11 +1,12 @@
 mod audio_modules;
 mod brain;
+mod chat;
 mod transcription;
 
 use audio_modules::recorder::{toggle_recording, toggle_recording_internal, RecordingState};
 use audio_modules::speaker::speak;
 use audio_modules::whisper_state::WhisperState;
-use chat_processor::ChatProcessor::process_chat;
+use chat::chat_processor::process_chat;
 use tauri::Manager;
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 use transcription::transcriber::transcribe;
