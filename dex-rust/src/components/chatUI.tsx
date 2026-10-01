@@ -25,7 +25,6 @@ export function ChatUI() {
     try {
       const reply = await invoke<string>("process_chat", { text });
       setMessages((prev) => [...prev, { role: "assistant", text: reply }]);
-      invoke("speak", { text: reply }).catch(console.error); // fire-and-forget, as before
     } catch (err) {
       setMessages((prev) => [
         ...prev,
@@ -37,10 +36,10 @@ export function ChatUI() {
   }
 
   return (
-    <div style={{ maxWidth: 480, margin: "0 auto" }}>
+    <div style={{ maxWidth: "800", margin: "0 auto" }}>
       <div
         style={{
-          height: 320,
+          height: 500,
           overflowY: "auto",
           border: "1px solid #ccc",
           padding: 12,
