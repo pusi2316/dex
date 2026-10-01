@@ -1,6 +1,7 @@
+use reqwest::Response;
 use serde_json::json;
 
-pub async fn ask_claude(prompt: &str) -> Result<String, String> {
+pub async fn ask_claude(prompt: &str) -> Result<Response, String> {
     let api_key = std::env::var("ANTHROPIC_API_KEY").map_err(|_| "ANTHROPIC_API_KEY not set".to_string())?;
 
     let client = reqwest::Client::new();
@@ -18,9 +19,5 @@ pub async fn ask_claude(prompt: &str) -> Result<String, String> {
         .await
         .map_err(|e| e.to_string())?;
 
-    let body: serde_json::Value = res.json().await.map_err(|e| e.to_string())?;
-    body["content"][0]["text"]
-        .as_str()
-        .map(|s| s.to_string())
-        .ok_or_else(|| format!("unexpected response shape: {body}"))
+    Ok(res)
 }
